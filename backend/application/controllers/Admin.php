@@ -4,9 +4,9 @@ class Admin extends CI_Controller{
   public function __construct(){
 
     parent::__construct();
-    header('Access-Control-Allow-Origin: *');
-    header('Access-Control-Allow-Methods: GET,POST,DELETE,PUT,PATCH');
-    header('Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept');
+    Header('Access-Control-Allow-Origin: *'); //for allow any domain, insecure
+    Header('Access-Control-Allow-Headers: *'); //for allow any headers, insecure
+    Header('Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE'); //method allowed
     //load database
     $this->load->database();
     $this->load->model(array("Admin_model"));
@@ -46,64 +46,61 @@ public function login_post() {
            $data = array(
             'id' => $detail->id,
             'username' =>  $detail->username,
-            'email' =>  $detail->email
+            'email' =>  $detail->email,
+            'appRoleId'=>1
            );
            $res = array(
             'status'=>'success', 
             'token'=>'authlogintoken', 
-            'appRoleId'=>1,
             'user'=>$data
           );
           echo json_encode($res);
          }        
          elseif($role == 2)
           {
-           $data = array(
-            'id' => $detail->id,
-            'username' =>  $detail->username,
-            'email' =>  $detail->email,
-            'role' =>  'Manager_ROLE',
-            'status' =>  $detail->username,
-           ); 
-           $res = array(
-            'status'=>2,
-            'message'=>'Manager',
-            'userData'=>$data
-          );
+            $data = array(
+              'id' => $detail->id,
+              'username' =>  $detail->username,
+              'email' =>  $detail->email,
+              'appRoleId'=>2
+             );
+             $res = array(
+              'status'=>'success', 
+              'token'=>'authlogintoken', 
+              'user'=>$data
+            );
           echo json_encode($res);
           } 
 
           elseif($role == 3)
           {
-           $data = array(
-            'id' => $detail->id,
-            'username' =>  $detail->username,
-            'email' =>  $detail->email,
-            'role' =>  'Agent_ROLE',
-            'status' =>  $detail->username,
-           ); 
-           $res = array(
-            'status'=>3,
-            'message'=>'Agent',
-            'userData'=>$data
-          );
+            $data = array(
+              'id' => $detail->id,
+              'username' =>  $detail->username,
+              'email' =>  $detail->email,
+              'appRoleId'=>3
+             );
+             $res = array(
+              'status'=>'success', 
+              'token'=>'authlogintoken', 
+              'user'=>$data
+            );
           echo json_encode($res);
           } 
 
           elseif($role == 4)
           {
-           $data = array(
-            'id' => $detail->id,
-            'username' =>  $detail->username,
-            'email' =>  $detail->email,
-            'role' =>  'Client_ROLE',
-            'status' =>  $detail->username,
-           ); 
-           $res = array(
-            'status'=>4,
-            'message'=>'Client',
-            'userData'=>$data
-          );
+            $data = array(
+              'id' => $detail->id,
+              'username' =>  $detail->username,
+              'email' =>  $detail->email,
+              'appRoleId'=>4
+             );
+             $res = array(
+              'status'=>'success', 
+              'token'=>'authlogintoken', 
+              'user'=>$data
+            );
           echo json_encode($res);
           } 
 
