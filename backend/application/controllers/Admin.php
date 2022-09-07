@@ -41,23 +41,22 @@ public function login_post() {
        if(password_verify($password, $detail->password)){
          $role = $detail->role;
         
-         if($role == 'Admin') 
+         if($role == 1) 
          {                      
            $data = array(
             'id' => $detail->id,
             'username' =>  $detail->username,
-            'email' =>  $detail->email,
-            'role' =>  'ADMIN_ROLE',
-            'status' =>  $detail->username,
+            'email' =>  $detail->email
            );
            $res = array(
-            'status'=>1, 
-            'message'=>'Admin',
-            'userData'=>$data
+            'status'=>'success', 
+            'token'=>'authlogintoken', 
+            'appRoleId'=>1,
+            'user'=>$data
           );
           echo json_encode($res);
          }        
-         elseif($role == 'Manager')
+         elseif($role == 2)
           {
            $data = array(
             'id' => $detail->id,
@@ -74,7 +73,7 @@ public function login_post() {
           echo json_encode($res);
           } 
 
-          elseif($role == 'Agent')
+          elseif($role == 3)
           {
            $data = array(
             'id' => $detail->id,
@@ -91,7 +90,7 @@ public function login_post() {
           echo json_encode($res);
           } 
 
-          elseif($role == 'Client')
+          elseif($role == 4)
           {
            $data = array(
             'id' => $detail->id,
