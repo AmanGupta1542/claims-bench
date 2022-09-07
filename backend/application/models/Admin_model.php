@@ -48,13 +48,13 @@ const USER_NOT_FOUND = 4;
    public function update_user($table,$user_id, $user_info){
 
       $this->db->where("id", $user_id);
-      return $this->db->update("admin", $user_info);
+      return $this->db->update($table, $user_info);
    }
 
   public function CheckCredential($email) 
     {
      $this->db->select('*');
-     $this->db->from('admin');
+     $this->db->from('admin'); 
      $this->db->where('email', $email);
      $this->db->limit(1);
      $query = $this ->db-> get();

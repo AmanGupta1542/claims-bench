@@ -26,7 +26,7 @@ class Admin extends CI_Controller{
   	echo "this is testing";
   }  
 
-public function login_post() {
+public function login_post() { 
  
     $_POST = json_decode(file_get_contents('php://input'), true);
     $data = $this->input->post();
@@ -116,8 +116,8 @@ public function login_post() {
      else 
      {    
       $res = array(
-        'status'=>0,
-        'message'=>'not_found'
+        'status'=>'error',
+        'message'=>'invalid Credentials!'
       );
       echo json_encode($res);    
      }
@@ -246,7 +246,7 @@ public function login_post() {
     //echo "This is PUT Method";
     $data = json_decode(file_get_contents("php://input"));
     
-    if(isset($id) && isset($data->name) && isset($data->email) && isset($data->mobile) && isset($data->username) && !empty($data->role) && !empty($data->status)){
+    if(isset($id) && isset($data->name) && isset($data->email) && isset($data->mobile) && isset($data->username)){
       date_default_timezone_set("America/New_York");
       $updated_date = date('Y-m-d H:i:s', time());
 
@@ -256,8 +256,6 @@ public function login_post() {
         "email" => $data->email,
         "mobile" => $data->mobile,
         "username" => $data->username,
-        "role" => $data->role,
-        "status" => $data->status,
         "updated_date" => $updated_date
       );
       echo json_encode($user_info);
