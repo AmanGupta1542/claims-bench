@@ -11,9 +11,9 @@ class AuthController extends CI_Controller
         $this->load->model('AuthModel');
         $this->load->helper('verifyAuthToken');
 
-        header("Access-Control-Allow-Origin: *");
-        header("Access-Control-Allow-Methods: GET, OPTIONS, POST, GET, PUT");
-        header("Access-Control-Allow-Headers: Content-Type, Content-Length, Accept-Encoding");
+        Header('Access-Control-Allow-Origin: *'); //for allow any domain, insecure
+        Header('Access-Control-Allow-Headers: *'); //for allow any headers, insecure
+        Header('Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE'); //method allowed
 
     }
 
