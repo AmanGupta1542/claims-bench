@@ -45,7 +45,7 @@ class AuthController extends CI_Controller
 
             $result_t=array();
             $result_t['sub'] = $result[0]->email;
-            $result_t['exp'] = date('d-m-Y H:i', strtotime($Date. ' + 2 day'));
+            $result_t['exp'] = time() + 172800; //172800;
      
             $token = $jwt->encode($result_t, $JwtSecretKey, 'HS256');
 
@@ -227,4 +227,124 @@ class AuthController extends CI_Controller
 
     }
 
+    public function getProfile()
+    {
+      
+        $data = $this->authUserToken([1,2,3,4]);
+        if($data){
+            // take role from comming data 
+            // perform operation
+            unset($data["password"]);
+            $res = array(
+                'status'=>'success', 
+                'user'=>$data
+              );
+             echo json_encode($res);
+        }
+        else{
+            // return status error and message invalid token
+            $res = array(
+                'status'=>'error', 
+                'message'=> "Invalid Token"
+              );
+             echo json_encode($res);
+        }
+
+    }
+
+    public function authUserToken($roleArr) {
+        $req= $this->input->request_headers() ;
+        if (array_key_exists('Authorization', $req)) {
+            $token = ltrim(substr($req['Authorization'], 6));
+    
+            $token_data = verifyAuthToken($token);
+            // print_r($token_data);
+            date_default_timezone_set('Asia/Kolkata');
+            $current_date = date('d-m-Y H:i:s', time());
+            $token_date = date("d-m-Y H:i:s", $token_data->exp);
+
+            // echo strtotime($current_date);
+            // echo strtotime($token_date);
+            // echo strtotime($current_date) - strtotime($token_date);
+            
+            if ((strtotime($current_date) - strtotime($token_date)) < 0){
+                // get role from email 
+                $user_email = $token_data->sub;
+                
+                // return data getting by email 
+                $res = $this->AuthModel->authUserEmail('admin',$user_email);
+                // print_r($res);
+                 $role=$res['role'];
+                // if role of user is exist in $role arrya ten return false else data
+                if(in_array($role, $roleArr)){
+                    return $res;
+                }
+                else{
+                    //role is not matched means not autheticated for this action                   
+                    // echo "false";
+                    return false;
+                }
+            }
+            else{
+                // if tooken invalid or expired then return 
+                return false;
+            }
+          }
+          else{
+            //if auth key not in header then return
+            return false;
+          }
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// public function getProfile()
+//     {
+//       $req= $this->input->request_headers() ;
+
+//       if (array_key_exists('Authorization', $req)) {
+//         $token = ltrim(substr($req['Authorization'], 6));
+
+//         $token_data = verifyAuthToken('eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1dGthcnNoQG1pc3RwbC5jb20iLCJleHAiOjE2NjMyMjkyNzV9.QC-8ew440FEYc1YXNq7aarZ2hjhRmlZKxsbOzNK-q4c');
+//         // print_r($token_data);
+//         date_default_timezone_set('Asia/Kolkata');
+//         $current_date = date('d-m-Y H:i:s', time());
+//         $token_date = date("d-m-Y H:i:s", $token_data->exp);
+        
+//         if ($current_date <= $token_data){
+//             // get role from email 
+//             $user_email = $token_data->sub;
+//             $role = 3;
+//             if ($role = 1){
+//                 // if matched the give response valid data
+//             }
+//             else{
+//                 // if role is not matched the return 
+
+//             }
+//         }
+//         else{
+//             // if tooken invalid or expired then return 
+//             echo 'false';
+//         }
+//       }
+//       else{
+//         //if auth key not in header then return
+//         echo "key not foud";    
+//       }
+//     }

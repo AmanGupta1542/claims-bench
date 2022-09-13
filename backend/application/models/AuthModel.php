@@ -23,6 +23,15 @@ class AuthModel extends CI_Model
         return $this->db->insert_id();
     }
 
+    public function authUserEmail($table,$user_email)
+    {
+        $this->db->select('*');
+        $this->db->from($table);
+        $this->db->where('email', $user_email);
+        $query = $this->db->get();
+
+        return $query->result_array()[0];
+    }
 
     public function getUsers($table,$id = "")
     {
