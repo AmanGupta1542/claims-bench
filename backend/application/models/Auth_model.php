@@ -12,7 +12,9 @@ class Auth_model extends CI_Model{
       $this->load->database();
       $this->load->helper('string');
    }
-   public function CheckCredential($email)
+
+   public function CheckCredential($email) 
+
     {
      $this->db->select('*');
      $this->db->from('users');
@@ -29,16 +31,17 @@ class Auth_model extends CI_Model{
      }     
     }
 
+
+
     public function insert_user($data = array()){
 
        return $this->db->insert("users", $data);
    }
 
-    public function Register_model($data)
-    {
       
       if(!empty($data))
       {
+
         
         $already = $this->db->where('email',$data[2])->get('users')->result();
         if(@count($already) == 0)

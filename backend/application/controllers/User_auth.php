@@ -12,48 +12,6 @@ class User_auth extends CI_Controller{
   } 
 
  
-  // public function register()
-  // {
-  //   $_POST = json_decode(file_get_contents('php://input'), true);
-
-  //   $insert = $this->input->post(); 
-
-  //       $result = $this->Auth_model->Register_model($insert);  
-
-  //        if($result == 2)
-  //        {
-  //          $arr = array(
-  //            'status'=>2,
-  //            'message'=>'exists'
-  //          );
-  //          echo json_encode($arr);
-  //        }
-  //        else if($result == 1)
-  //        {
-  //          $arr = array(
-  //            'status'=>1,
-  //            'message'=>'success'
-  //          );
-  //          echo json_encode($arr);
-  //        }
-  //        else
-  //        {
-  //          $arr = array(
-  //            'status'=>0,
-  //            'message'=>'failed'
-  //          );
-  //          echo json_encode($arr);
-  //        }
-  //      // }else{
-  //      //     $arr = array(
-  //      //       'status'=> 'registraion failed',
-  //      //       'message'=>'Please try again.'
-  //      //     );
-  //      //     echo json_encode($arr);
-  //      // }
-  //   }
-
- 
 
  public function index_post(){
     // insert data method
