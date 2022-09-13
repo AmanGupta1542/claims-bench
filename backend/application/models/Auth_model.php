@@ -12,7 +12,9 @@ class Auth_model extends CI_Model{
       $this->load->database();
       $this->load->helper('string');
    }
+
    public function CheckCredential($email) 
+
     {
      $this->db->select('*');
      $this->db->from('users');
@@ -29,57 +31,39 @@ class Auth_model extends CI_Model{
      }     
     }
 
-    public function Register_model($data)
-    {
+
+
+    public function insert_user($data = array()){
+
+       return $this->db->insert("users", $data);
+   }
+
       
       if(!empty($data))
       {
-        $already = $this->db->where('email',$data['email'])->get('users')->result();
+
+        
+        $already = $this->db->where('email',$data[2])->get('users')->result();
         if(@count($already) == 0)
         {
-          $password = password_hash($data['password'], PASSWORD_BCRYPT);
+          $password = password_hash($data[5], PASSWORD_BCRYPT);
           date_default_timezone_set("America/New_York");
           $created_date = date('Y-m-d H:i:s', time());
           $data_insert = array(
-            'first_name' => $data['fname'],
-            'last_name' => $data['lname'],
-            'username' => $data['fname']." ".$data['lname'],
-            'email' => $data['email'],
-            'language' => $data['language'],
-            'billing_address1' => $data['billing_address1'],
-            'billing_address2' => $data['billing_address2'],           
-            'password' => $password,
-            'mobile_number' => $data['mobile_no'],
-            'country' => $data['country'],
-            'state' => $data['state'],
-            'city' => $data['city'],
-            'postal_code' => $data['postal_code'],
-            'license_valid_date' => $data['license'],
-            'ip_address' => $this->get_client_ip(),
-            'created_at' => $created_date,
-            'updated_at' => $created_date,
-            'hash_code' => "hash1"
+            'first_name' => $data[0],
+            'last_name' => $data[1],
+            'username' => $data[0]." ".$data[1],
+            'email' => $data[2],
+            'mobile_number' => $data[3],
+            'language' => $data[4],          
+            'password' => $password
+            
           );
           $res = $this->db->insert('users',$data_insert);
-          $id = $this->db->insert_id();
-          if($id)
-          {
-            $rand_num = random_string('alnum', 16);
-            $gen_code = array(
-              'user_id' => $id,
-              'code' => $rand_num
-            );
-            $res1 = $this->db->insert('sharingcode',$gen_code);
-            if($res1)
-              return 1;
-            else
-              return 0;
-          }
-          else
-            return 0;
+     
         }
         else
-          return 2;
+          return 0;
       }
       else
         echo "no data";

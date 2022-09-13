@@ -12,46 +12,77 @@ class User_auth extends CI_Controller{
   } 
 
  
-  public function register()
-  {
+
+ public function index_post(){
+    // insert data method
+
+    //print_r($this->input->post());die;
     $_POST = json_decode(file_get_contents('php://input'), true);
 
-    $insert = $this->input->post(); 
+     
+    // collecting form data inputs
+    $fname = $this->security->xss_clean($this->input->post("fname"));
+    $lname = $this->security->xss_clean($this->input->post("lname"));
+    $email = $this->security->xss_clean($this->input->post("email"));
+    $mobile = $this->security->xss_clean($this->input->post("mobile_no"));
+    $language = $this->security->xss_clean($this->input->post("language"));
+    $password = $this->security->xss_clean($this->input->post("password"));
 
-        $result = $this->Auth_model->Register_model($insert);  
+    // form validation for inputs
+    $this->form_validation->set_rules("fname", "First Name", "required");
+    $this->form_validation->set_rules("lname", "Last Name", "required");
+    $this->form_validation->set_rules("email", "Email", "required|valid_email");
+    $this->form_validation->set_rules("mobile_no", "Mobile", "required");
+    $this->form_validation->set_rules("language", "language", "required");
+    $this->form_validation->set_rules("password", "password", "required");
 
-         if($result == 2)
-         {
-           $arr = array(
-             'status'=>2,
-             'message'=>'exists'
-           );
-           echo json_encode($arr);
-         }
-         else if($result == 1)
-         {
-           $arr = array(
-             'status'=>1,
-             'message'=>'success'
-           );
-           echo json_encode($arr);
-         }
-         else
-         {
-           $arr = array(
+    // checking form submittion have any error or not
+    if($this->form_validation->run() === FALSE){
+
+      $arr = array(
              'status'=>0,
-             'message'=>'failed'
+             'message'=>'All fields are needed'
            );
-           echo json_encode($arr);
-         }
-       // }else{
-       //     $arr = array(
-       //       'status'=> 'registraion failed',
-       //       'message'=>'Please try again.'
-       //     );
-       //     echo json_encode($arr);
-       // }
-}
+      echo json_encode($arr);
+    }else{
+
+      if(!empty($fname) && !empty($lname)&& !empty($email)&& !empty($mobile) && !empty($mobile) && !empty($language)&& !empty($password)){
+        // all values are available
+        $data = array(
+         $fname,
+           $lname,
+          $email,
+           $mobile,
+           $language,
+           $password
+        );
+         echo json_encode($data);
+        if($this->Auth_model->Register_model($data)){
+          $arr = array(
+             'status'=>1,
+             'message'=>'User has been created'
+           );
+          echo json_encode($arr);
+        }else{
+ 
+          $arr = array(
+             'status'=>0,
+             'message'=>'Failed to create User'
+           );
+          echo json_encode($arr);
+        }
+      }else{
+        // we have some empty field
+        $arr = array(
+             'status'=>0,
+             'message'=>'All fields are needed'
+           );
+        echo json_encode($arr);
+      }
+    }
+
+
+  }
 
 
   public function check_loggin()
