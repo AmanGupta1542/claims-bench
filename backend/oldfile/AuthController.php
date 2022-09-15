@@ -9,7 +9,7 @@ class AuthController extends CI_Controller
         parent::__construct();
         error_reporting(0);
         $this->load->model('AuthModel');
-        $this->load->helper('verifyAuthToken');
+        // $this->load->helper('verifyAuthToken');
 
         Header('Access-Control-Allow-Origin: *'); //for allow any domain, insecure
         Header('Access-Control-Allow-Headers: *'); //for allow any headers, insecure
@@ -18,6 +18,16 @@ class AuthController extends CI_Controller
 
     }
 
+    public function verifyAuthToken($token){
+        $jwt = new JWT();
+        $jwtSecret = 'myloginSecret';
+        $verification = $jwt->decode($token,$jwtSecret,'HS256');
+         return $verification;
+        // $verification_json = $jwt->jsonEncode($verification);
+        // return $verification_json;
+
+    }
+    
     public function index()
     {
         echo "this is working fine";
@@ -140,7 +150,7 @@ class AuthController extends CI_Controller
         $token = $headerToken;
 
         try {
-            $token = verifyAuthToken($token);
+            $token = $this->verifyAuthToken($token);
             if ($token) {
                 $_POST = json_decode(file_get_contents('php://input'), true);
 
@@ -208,7 +218,7 @@ class AuthController extends CI_Controller
         // exm -Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.W3sidXNlcl9pZCI6IjIiLCJuYW1lIjoiYXNoaXNoIiwiZW1haWwiOiJhc2hpc2hAbWlzdHBsLmNvbSIsInBhc3N3b3JkIjoiMTIzNDU2Iiwic3RhdHVzIjoiMCIsInJvbGVfaWQiOiIyIn1d.YAYbfZTVDUOzoX6mB6bMvOIh_yoAZljzvYBhMisnf6s
 
         try {
-            $token = verifyAuthToken($token);
+            $token = $this->verifyAuthToken($token);
             if ($token) {
                 $users = $this->AuthModel->getUsers('admin',$id);
                 echo json_encode($users);
@@ -257,7 +267,7 @@ class AuthController extends CI_Controller
         if (array_key_exists('Authorization', $req)) {
             $token = ltrim(substr($req['Authorization'], 6));
     
-            $token_data = verifyAuthToken($token);
+            $token_data = $this->verifyAuthToken($token);
             // print_r($token_data);
             date_default_timezone_set('Asia/Kolkata');
             $current_date = date('d-m-Y H:i:s', time());
@@ -296,55 +306,3 @@ class AuthController extends CI_Controller
           }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// public function getProfile()
-//     {
-//       $req= $this->input->request_headers() ;
-
-//       if (array_key_exists('Authorization', $req)) {
-//         $token = ltrim(substr($req['Authorization'], 6));
-
-//         $token_data = verifyAuthToken('eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1dGthcnNoQG1pc3RwbC5jb20iLCJleHAiOjE2NjMyMjkyNzV9.QC-8ew440FEYc1YXNq7aarZ2hjhRmlZKxsbOzNK-q4c');
-//         // print_r($token_data);
-//         date_default_timezone_set('Asia/Kolkata');
-//         $current_date = date('d-m-Y H:i:s', time());
-//         $token_date = date("d-m-Y H:i:s", $token_data->exp);
-        
-//         if ($current_date <= $token_data){
-//             // get role from email 
-//             $user_email = $token_data->sub;
-//             $role = 3;
-//             if ($role = 1){
-//                 // if matched the give response valid data
-//             }
-//             else{
-//                 // if role is not matched the return 
-
-//             }
-//         }
-//         else{
-//             // if tooken invalid or expired then return 
-//             echo 'false';
-//         }
-//       }
-//       else{
-//         //if auth key not in header then return
-//         echo "key not foud";    
-//       }
-//     }
