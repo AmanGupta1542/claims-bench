@@ -353,14 +353,14 @@ class Users extends CI_Controller
             // retruns true
 
             $arr = array(
-                'status' => 1,
+                'status' => 'success',
                 'message' => 'User has been deleted',
             );
             echo json_encode($arr);
         } else {
             // return false
             $arr = array(
-                'status' => 0,
+                'status' => 'error',
                 'message' => 'Failed to delete User',
             );
             echo json_encode($arr);
@@ -388,14 +388,14 @@ class Users extends CI_Controller
              {
               
               $arr = array(
-                  'status' => 1,
+                  'status' => 'success',
                   'message' => 'password updated successfully',
               );
               echo json_encode($arr);
           } else {
 
               $arr = array(
-                  'status' => 0,
+                  'status' => 'error',
                   'message' => 'Failed to update password',
               );
               echo json_encode($arr);

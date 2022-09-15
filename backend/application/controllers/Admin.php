@@ -22,10 +22,11 @@ class Admin extends CI_Controller{
     LIST: Get REQUEST TYPE
   */ 
 
-  public function ExlfileUpload()
-	{
+  
 
-		$_FILES = json_decode(file_get_contents('php://input'), true);
+		public function ExlfileUpload()
+	  {
+    $_FILES = json_decode(file_get_contents('php://input'), true);
     // print_r($_FILES);
 		$folderPath = "/assets";
 		$img = $_FILES['exc_file'];
@@ -83,6 +84,52 @@ class Admin extends CI_Controller{
   
   }
  
-  
+  public function otputData($page)
+	{ 
+    $first_page= false;
+    $last_page = false;
+    $total_records = $this->Admin_model->getCount('tbl_output');
+    $row_limit = 20;
+    $total_pages = ceil($total_records/$row_limit);
+
+    // handle errors
+    if ($page > $total_pages || $page < 1){
+      $arr = array(
+        'status' => 'error',
+        'message' => 'Invalid page number.',
+      );
+      echo json_encode($arr);
+    }
+
+    else{
+
+      $skip = 0;
+      if($page > 1){
+        $first_page = false;
+        $skip = $row_limit* ($page - 1);
+      }
+      else{
+        $first_page = true;
+      }
+      if($total_pages == $page){
+        $last_page = true;
+      }
+      $data_arr = $this->Admin_model->getOutputData($skip, $row_limit);
+
+
+
+      $arr = array(
+        'status' => 'success',
+        'first_page' => $first_page,
+        'last_page' => $last_page,
+        'total_pages' =>  $total_pages,
+        'current_page' => $page,
+        'data'=> $data_arr,
+      );
+      echo json_encode($arr);
+    }
+
+  }
+
 }
 ?>
